@@ -5,3 +5,9 @@ Extension for MvcCore_Debug class to use nette/tracy library.
 ```shell
 composer require mvccore/ext-tracy
 ```
+
+## Usage
+Add this to Bootstrap.php or to very application beginning:
+```php
+MvcCore::GetInstance()->SetDebugClass(MvcCoreExt_Tracy::class);
+```
