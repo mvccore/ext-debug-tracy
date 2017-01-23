@@ -37,6 +37,12 @@ class MvcCoreExt_Tracy extends MvcCore_Debug
 		// 'IncludePanel', // added every time strictly, not in foreach
 	);
 	/**
+	 * Add editor key for every Tracy editor link 
+	 * to open your files in specific editor.
+	 * @var string
+	 */
+	public static $Editor = '';
+	/**
 	 * Initialize debuging and loging.
 	 * @param boolean $debugMode TRUE for development, FALSE for production.
 	 * @return void
@@ -50,7 +56,7 @@ class MvcCoreExt_Tracy extends MvcCore_Debug
 		} else {
 			\Tracy\Debugger::$maxLength = 5000;
 		}
-		\Tracy\Debugger::$editor .= '&editor=MSVS2015';
+		if (static::$Editor) \Tracy\Debugger::$editor .= '&editor=' . static::$Editor;
 		$tracyBar = \Tracy\Debugger::getBar();
 		foreach (static::$ExtendedPanels as $panelName) {
 			$panelName = 'MvcCoreExt_Tracy_' . $panelName;
