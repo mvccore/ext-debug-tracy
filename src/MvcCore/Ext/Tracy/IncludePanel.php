@@ -8,10 +8,12 @@
  * the LICENSE.md file that are distributed with this source code.
  *
  * @copyright	Copyright (c) 2016 Tom Flídr (https://github.com/mvccore/mvccore)
- * @license		https://mvccore.github.io/docs/mvccore/3.0.0/LICENCE.md
+ * @license		https://mvccore.github.io/docs/mvccore/4.0.0/LICENCE.md
  */
 
-class MvcCoreExt_Tracy_IncludePanel implements Tracy\IBarPanel {
+namespace MvcCore\Ext\Debug\Tracy;
+
+class IncludePanel implements \Tracy\IBarPanel {
 	protected static $files = array();
 	protected static $appFilesCount = 0;
 	protected static $allFilesCount = 0;
@@ -50,7 +52,7 @@ class MvcCoreExt_Tracy_IncludePanel implements Tracy\IBarPanel {
 				$tracyFile = mb_stripos($text, $tracyFileDetectionSubstr) !== FALSE;
 				if (!$tracyFile) static::$appFilesCount += 1;
 				static::$allFilesCount += 1;
-				$href = Tracy\Helpers::editorUri($file, 1);
+				$href = \Tracy\Helpers::editorUri($file, 1);
 				$list[] = '<a '.($tracyFile ? 'class="tracy" ':'').'href="'.$href.'"><nobr>'.$text.'</nobr></a><br />';
 			}
 			static::$files = & $list;

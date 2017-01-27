@@ -8,17 +8,24 @@
  * the LICENSE.md file that are distributed with this source code.
  *
  * @copyright	Copyright (c) 2016 Tom Flídr (https://github.com/mvccore/mvccore)
- * @license		https://mvccore.github.io/docs/mvccore/3.0.0/LICENCE.md
+ * @license		https://mvccore.github.io/docs/mvccore/4.0.0/LICENCE.md
  */
 
 // Tracy library main class:
 //require_once('Tracy/Debugger.php');
 
-// tracy panels:
+// MvcCore Tracy extension panel:
 require_once('Tracy/IncludePanel.php');
 
-class MvcCoreExt_Tracy extends MvcCore_Debug
-{
+namespace MvcCore\Ext\Debug;
+
+class Tracy extends \MvcCore\Debug {
+	/**
+	 * MvcCore Extension - Debug Tracy - version:
+	 * Comparation by PHP function version_compare();
+	 * @see http://php.net/manual/en/function.version-compare.php
+	 */
+	const VERSION = '4.0.0';
 	/**
 	 * Auto initialize all panel classes if exists in registry bellow.
 	 * @var bool
@@ -59,13 +66,13 @@ class MvcCoreExt_Tracy extends MvcCore_Debug
 		if (static::$Editor) \Tracy\Debugger::$editor .= '&editor=' . static::$Editor;
 		$tracyBar = \Tracy\Debugger::getBar();
 		foreach (static::$ExtendedPanels as $panelName) {
-			$panelName = 'MvcCoreExt_Tracy_' . $panelName;
+			$panelName = '\MvcCore\Ext\Debug\Tracy_' . $panelName;
 			if (class_exists($panelName)) {
 				$panel = new $panelName();
 				$tracyBar->addPanel($panel, $panel->getId());
 			}
 		}
-		$includePanel = new MvcCoreExt_Tracy_IncludePanel();
+		$includePanel = new \MvcCore\Ext\Debug\Tracy\IncludePanel();
 		$tracyBar->addPanel($includePanel, $includePanel->getId());
 		\Tracy\Debugger::enable(!static::$development, static::$LogDirectory, static::$EmailRecepient);
 	}
@@ -114,13 +121,13 @@ class MvcCoreExt_Tracy extends MvcCore_Debug
 		 * @param	mixed		variable to dump
 		 * @param	string		optional title
 		 * @param	array		dumper options
-		 * @throws	Exception
+		 * @throws	\Exception
 		 * @return	void
 		 */
 		function xxx ($var = NULL) {
 			$args = func_get_args();
 			if (count($args) === 0) {
-				throw new Exception("Stopped.");
+				throw new \Exception("Stopped.");
 			} else {
 				@header("Content-Type: text/html; charset=utf-8");
 				foreach ($args as $arg) \Tracy\Debugger::barDump($arg);
