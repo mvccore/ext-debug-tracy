@@ -25,12 +25,12 @@
 	],
 	"require": {
 		"php": ">=5.3.0",
-		"mvccore/mvccore": "^4.1",
+		"mvccore/mvccore": "^4.2",
 		"tracy/tracy": "^2.4"
 	},
 	"require-dev": {
 		"php": ">=5.3.0",
-		"mvccore/mvccore": "~4.1@dev",
+		"mvccore/mvccore": "~4.2@dev",
 		"tracy/tracy": "^2.4"
 	},
 	"autoload": {
