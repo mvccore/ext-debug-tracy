@@ -4,7 +4,7 @@
  * MvcCore
  *
  * This source file is subject to the BSD 3 License
- * For the full copyright and license information, please view 
+ * For the full copyright and license information, please view
  * the LICENSE.md file that are distributed with this source code.
  *
  * @copyright	Copyright (c) 2016 Tom Flídr (https://github.com/mvccore/mvccore)
@@ -25,7 +25,7 @@ namespace MvcCore\Ext\Debug {
 		 * Comparation by PHP function version_compare();
 		 * @see http://php.net/manual/en/function.version-compare.php
 		 */
-		const VERSION = '4.2.0';
+		const VERSION = '4.3.1';
 		/**
 		 * Auto initialize all panel classes if exists in registry bellow.
 		 * @var bool
@@ -44,7 +44,7 @@ namespace MvcCore\Ext\Debug {
 			// 'IncludePanel', // added every time strictly, not in foreach
 		);
 		/**
-		 * Add editor key for every Tracy editor link 
+		 * Add editor key for every Tracy editor link
 		 * to open your files in specific editor.
 		 * @var string
 		 */
