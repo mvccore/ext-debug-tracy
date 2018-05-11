@@ -25,7 +25,7 @@ namespace MvcCore\Ext\Debug {
 		 * Comparation by PHP function version_compare();
 		 * @see http://php.net/manual/en/function.version-compare.php
 		 */
-		const VERSION = '4.3.1';
+		const VERSION = '5.0.0-alpha';
 		/**
 		 * Auto initialize all panel classes if exists in registry bellow.
 		 * @var bool
@@ -63,7 +63,7 @@ namespace MvcCore\Ext\Debug {
 		 * @return void
 		 */
 		public static function Init () {
-			if (!is_null(static::$development)) return;
+			if (static::$development !== NULL) return;
 			parent::Init();
 			\Tracy\Debugger::$maxDepth = 4;
 			if (isset(\Tracy\Debugger::$maxLen)) { // backwards compatibility
@@ -82,6 +82,7 @@ namespace MvcCore\Ext\Debug {
 			}
 			$includePanel = new \MvcCore\Ext\Debug\Tracy\IncludePanel();
 			$tracyBar->addPanel($includePanel, $includePanel->getId());
+			if (!static::$logDirectoryInitialized) static::initLogDirectory();
 			\Tracy\Debugger::enable(!static::$development, static::$LogDirectory, static::$EmailRecepient);
 		}
 
@@ -91,9 +92,9 @@ namespace MvcCore\Ext\Debug {
 		 */
 		protected static function initHandlers () {
 			foreach (static::$handlers as $key => $value) {
-				static::$handlers[$key] = array('\Tracy\Debugger', $key);
+				static::$handlers[$key] = array(\Tracy\Debugger::class, $key);
 			}
-			static::$handlers = (object) static::$handlers;
+			//register_shutdown_function(self::$handlers['shutdownHandler']); // already registered inside tracy debugger
 		}
 	}
 }

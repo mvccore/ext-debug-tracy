@@ -14,5 +14,5 @@ composer require mvccore/ext-debug-tracy
 ## Usage
 Add this to Bootstrap.php or to very application beginning:
 ```php
-\MvcCore::GetInstance()->SetDebugClass(\MvcCore\Ext\Debug\Tracy::class);
+\MvcCore\Application::GetInstance()->SetDebugClass(\MvcCore\Ext\Debug\Tracy::class);
 ```
