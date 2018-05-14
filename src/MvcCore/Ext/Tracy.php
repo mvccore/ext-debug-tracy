@@ -19,21 +19,27 @@ namespace MvcCore\Ext\Debug {
 	// MvcCore Tracy extension panel:
 	require_once('Tracy/IncludePanel.php');
 
+	/**
+	 * Responsibility - any devel and logging messages and exceptions printing and logging by `Tracy`.
+	 * - Printing any variable in content body by `Tracy`.
+	 * - Printing any variable in `Tracy` debug bar.
+	 * - Catched exceptions printing by `Tracy`.
+	 * - Any variables and catched exceptions file logging by `Tracy`.
+	 * - Time printing by `Tracy`.
+	 */
 	class Tracy extends \MvcCore\Debug {
+
 		/**
 		 * MvcCore Extension - Debug Tracy - version:
 		 * Comparation by PHP function version_compare();
 		 * @see http://php.net/manual/en/function.version-compare.php
 		 */
 		const VERSION = '5.0.0-alpha';
-		/**
-		 * Auto initialize all panel classes if exists in registry bellow.
-		 * @var bool
-		 */
-		public static $autoInitPanels = TRUE;
+
 		/**
 		 * Extended Tracy panels registry for automatic panel initialization.
-		 * If panel class exists, it is automaticly created and registred into Tracy bar.
+		 * If panel class exists in `\MvcCore\Ext\Debug\Tracy\<PanelClassName>`,
+		 * it's automaticly created and registred into Tracy debug bar.
 		 * @var string[]
 		 */
 		public static $ExtendedPanels = array(
@@ -41,8 +47,9 @@ namespace MvcCore\Ext\Debug {
 			'SessionPanel',
 			'RoutingPanel',
 			'AuthPanel',
-			// 'IncludePanel', // added every time strictly, not in foreach
+			// 'IncludePanel', // created and registered every time by default as the last one
 		);
+
 		/**
 		 * Add editor key for every Tracy editor link
 		 * to open your files in specific editor.
@@ -51,35 +58,34 @@ namespace MvcCore\Ext\Debug {
 		public static $Editor = '';
 
 		/**
-		 * Initialize global development shorthands.
-		 * @param string $logDirectory relative path from app root
-		 * @var callable
-		 */
-		public static $InitGlobalShortHands = array();
-
-		/**
-		 * Initialize debuging and loging.
-		 * @param boolean $debugMode TRUE for development, FALSE for production.
+		 * Initialize debugging and logging, once only.
+		 * @param bool $forceDevelopmentMode If defined as `TRUE` or `FALSE`,
+		 *                                   debug mode will be set not by config but by this value.
 		 * @return void
 		 */
-		public static function Init () {
+		public static function Init ($forceDevelopmentMode = NULL) {
 			if (static::$development !== NULL) return;
-			parent::Init();
+			parent::Init($forceDevelopmentMode);
 			\Tracy\Debugger::$maxDepth = 4;
 			if (isset(\Tracy\Debugger::$maxLen)) { // backwards compatibility
 				\Tracy\Debugger::$maxLen = 5000;
 			} else {
 				\Tracy\Debugger::$maxLength = 5000;
 			}
+			// if there is any editor string defined - add editor param into all file debug links
 			if (static::$Editor) \Tracy\Debugger::$editor .= '&editor=' . static::$Editor;
+			// automaticly initialize all classes in `\MvcCore\Ext\Debug\Tracy\<PanelClassName>`
+			// which implements `\Tracy\IBarPanel` and add those instances into tracy debug bar:
 			$tracyBar = \Tracy\Debugger::getBar();
+			$toolClass = static::$app->GetToolClass();
 			foreach (static::$ExtendedPanels as $panelName) {
 				$panelName = '\MvcCore\Ext\Debug\Tracy\\' . $panelName;
-				if (class_exists($panelName)) {
+				if (class_exists($panelName) && $toolClass::CheckClassInterface($panelName, 'Tracy\\IBarPanel', FALSE)) {
 					$panel = new $panelName();
 					$tracyBar->addPanel($panel, $panel->getId());
 				}
 			}
+			// all include panel every time as the last one
 			$includePanel = new \MvcCore\Ext\Debug\Tracy\IncludePanel();
 			$tracyBar->addPanel($includePanel, $includePanel->getId());
 			if (!static::$logDirectoryInitialized) static::initLogDirectory();
@@ -100,44 +106,62 @@ namespace MvcCore\Ext\Debug {
 }
 
 namespace {
-	\MvcCore\Ext\Debug\Tracy::$InitGlobalShortHands = function () {
+	\MvcCore\Ext\Debug\Tracy::$InitGlobalShortHands = function ($development) {
 		/**
-			* Dump a variable in Tracy Debug Bar.
-			* @param	mixed	$value		variable to dump
-			* @param	string	$title		optional title
-			* @param	array	$options	dumper options
-			* @return	mixed				variable itself
-			*/
+		 * Dump a variable in Tracy Debug Bar.
+		 * @param	mixed	$value		Variable to dump.
+		 * @param	string	$title		Optional title.
+		 * @param	array	$options	Dumper options.
+		 * @return	mixed				variable itself.
+		 */
 		function x ($value, $title = NULL, $options = array()) {
 			return \Tracy\Debugger::barDump($value, $title, $options);
 		}
 		/**
-			* Dumps variables about a variable in Tracy Debug Bar.
-			* @param	...mixed	variables to dump
-			* @return	void
-			*/
+		 * Dumps variables about a variable in Tracy Debug Bar.
+		 * @param  ...mixed  Variables to dump.
+		 * @return	void
+		 */
 		function xx () {
 			$args = func_get_args();
 			foreach ($args as $arg) \Tracy\Debugger::barDump($arg);
 		}
-		/**
-			* Dump a variable in Tracy Debug Bar and die. If no variable, throw stop exception.
-			* @param	mixed		variable to dump
-			* @param	string		optional title
-			* @param	array		dumper options
-			* @throws	\Exception
-			* @return	void
-			*/
-		function xxx ($var = NULL) {
-			$args = func_get_args();
-			if (count($args) === 0) {
-				throw new \Exception("Stopped.");
-			} else {
-				@header("Content-Type: text/html; charset=utf-8");
-				foreach ($args as $arg) \Tracy\Debugger::barDump($arg);
+
+		if ($development) {
+			/**
+			 * Dump variables and die. If no variable, throw stop exception.
+			 * @param  ...mixed  $args	Variables to dump.
+			 * @throws \Exception
+			 * @return void
+			 */
+			function xxx (/*...$args*/) {
+				$args = func_get_args();
+				if (count($args) === 0) {
+					throw new \ErrorException('Stopped.', 500);
+				} else {
+					\MvcCore\Application::GetInstance()->GetResponse()->SetHeader('Content-Type', 'text/html');
+					@header('Content-Type: text/html');
+					foreach ($args as $arg)
+						echo \Tracy\Dumper::toHtml($arg, array(
+							\Tracy\Dumper::LOCATION => \Tracy\Dumper::LOCATION_CLASS | \Tracy\Dumper::LOCATION_SOURCE,
+						));
+					exit;
+				}
 			}
-			echo ob_get_clean();
-			die();
+		} else {
+			/**
+			 * Log variables and die. If no variable, throw stop exception.
+			 * @param  ...mixed  $args	Variables to dump.
+			 * @throws \Exception
+			 * @return void
+			 */
+			function xxx (/*...$args*/) {
+				$args = func_get_args();
+				if (count($args) > 0)
+					foreach ($args as $arg)
+						\Tracy\Debugger::log($arg, \Tracy\ILogger::DEBUG);
+				\Tracy\Debugger::getBlueScreen()->render(NULL);
+			}
 		}
 	};
 }

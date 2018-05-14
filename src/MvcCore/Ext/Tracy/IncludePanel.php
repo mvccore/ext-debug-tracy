@@ -13,21 +13,56 @@
 
 namespace MvcCore\Ext\Debug\Tracy;
 
-class IncludePanel implements \Tracy\IBarPanel {
+/**
+ * Responsibility - after all scripts are done, display all used PHP files in it's own `Tracy` debug bar.
+ * - Generate for all used PHP files their file debug links.
+ * - If any used file is used by tracy debug bar - mark this file in debug panel by different css colour.
+ */
+class IncludePanel implements \Tracy\IBarPanel
+{
+	/**
+	 * All used PHP files list by current request.
+	 * @var string[]
+	 */
 	protected static $files = array();
+
+	/**
+	 * Used PHP files count except files used by `Tracy` extension.
+	 * @var mixed
+	 */
 	protected static $appFilesCount = 0;
+
+	/**
+	 * All used PHP files count.
+	 * @var int
+	 */
 	protected static $allFilesCount = 0;
+
+	/**
+	 * Get unique `Tracy` debug bar panel id.
+	 * @return string
+	 */
 	public function getId() {
 		return 'include-panel';
 	}
+
+	/**
+	 * Return rendered debug panel heading HTML code displayed all time in `Tracy` debug  bar.
+	 * @return string
+	 */
 	public function getTab() {
-		static::getFiles();
-		return '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACt0lEQVQ4y62TW0iTcRjGn28nv43NzW14nM506s0UJDMVyo4k2RwolpJUhEUSyyiCCsSrSsrIKLuqoDAsBCVIQsWyoDLLQyhGU1Gz2jyxT79t7vR9/y5Kc+ZFFz2XD8//B+/z/l8h1pFMJhOEqtS5m3fkWyL1KSZm3s75vJ4x/ItCQ5WywsMnm1rffia9Ux7S9MlJjtW1EXl0wnmYLYK1eeFaIyvvwN0z1bWlaQmR4AhgZzmwkgiMDfVtxWAH7XWxADC+nA8iSqVSQ9qukjJXQATrnB9fZv2YYjjYWA5SQUBSfrziommfqZXWRhUsvxGtBvj9fiMXZhBY5/wQCygseHhMMRysk3bo3R8QF18M44ZoWh8f/+h2wxMTHNNdQSPQNA1EpJ7wKRMFNpbDhCOA0W+z0PVUIik1A+aC/Xjd/R5CWiYZHJ/SBXJLmqjVgENFKRkajfBli80kV+mSQS+MwOhsQZghFQcrriEpOmola9i2p3smbuPulQ4qy1P3nisTdwjcC3P24WcvhK+qF7eH25BRXAVzaQ0UAgWmp13o7f0BsVgICtSfDqpOpx8t2eK6VfMwMNHImevzjPZLWrVadurCVbQ9H8X1y29ACIHFkoWRkXkYjVrwhPzagkoRkpypd9w8e0883Ejyr/Aiyf3szE1yQ2KiyMV60Nk5Crfbh6goOez2RQwN2eF0LoH8BogY1ms98iC8iEnIFhEe7XxzXSAkpxY+XwBLSx6oVBJoNDRMpiTYbC7QtBAsuwoAAPMDPe0Y6FkpyOv1w+Pxg2EWUViYAAAQiznExoYgJiYODgcDnuf//gfLcru9iIjWoaHlcZD/fXIC76zjHymRZJERK74SQtYH9Pf3IUcqh06tCfKdM9NwKGOaqHD9HQLC88033NR6ACp9Zw6l1BrXvTal1so/re/C/9JPOxcb0VoXrMkAAAAASUVORK5CYII="/>'
+		static::completeFilesCountsAndEditorLinks();
+		return '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAADtUExURQAAAANAWAULDjxIVExOUQsKCA4nMANOaxYyPQJCWg0ZHgJQbQYMDyM8UzVrnmhXHl1eYm5uaHx8gQolLVJfaz9PXm2TtrOPIH1wMV5TJ29kLQI8UtWtJkhKK3FmKtOvLAQ1SARQbTMqHIyMjISEicLCz6zS9GdyeN/f6vf3+Vai6qOjymtrrb3Z83y37o3A8Obt9TaI03dxWdDY3ZmannJyr1BQoXeAhMPH3dTU37291rXG183j+Nbo+WWQuWqk2mCo6om+72Ko61JRQnN+hUczHJGepiBNd2ROJzhaeJijpF1dpkdHm5iYxe7u8lzeC4UAAAAkdFJOUwACQpD4JkALx2Z+RU/8/dr9+f28q6H982I0Snb1y/Pvn1zx+/LnWboAAAC0SURBVBjTbczVFoJAFIXhoUtQ7M4RKUUBBbs73v9xZAD1xu/u/GuvAwCC4QSBgx8mO18oKx77hlx/uFQGIv8ZUXmlr1gb8UAmopBYb63BbnQ8uXK0oSRd10d72fG8DINCqX6Wrhfb0TSNRaHcSGba9s1XVT8MxWqSI1NDYzKZPV9BoAq1FgOhen+YhqmiBS1goAOn5nhmjKfhjwBMdyOfkHZ7AZJlm3EgIZKqMPENaC4kgD/e1akVKEqC52oAAAAASUVORK5CYII="/>'
 			. self::$appFilesCount;
 	}
+
+	/**
+	 * Return rendered debug panel content window HTML code.
+	 * @return string
+	 */
 	public function getPanel() {
-		self::getFiles();
-		$userListCode = join("", static::$files);
+		self::completeFilesCountsAndEditorLinks();
+		$usedFilesListCode = join("", static::$files);
 		return '<style type="text/css">'
 				.'#tracy-include-panel .content{overflow:auto;max-width:800px;max-height:800px;}'
 				.'#tracy-include-panel .content .tracy{color:#7a91a9;background:#eee;}'
@@ -35,11 +70,16 @@ class IncludePanel implements \Tracy\IBarPanel {
 			.'<div id="tracy-include-panel">'
 				.'<h1>Included app files: '.static::$appFilesCount.' (all: '.static::$allFilesCount.')</h1>'
 				.'<div class="content"><code>'
-					.$userListCode
+					.$usedFilesListCode
 				.'<code></div>'
 			.'</div>';
 	}
-	protected static function getFiles () {
+
+	/**
+	 * Complete final used PHP files list as list of HTML codes with editor links.
+	 * @return void
+	 */
+	protected static function completeFilesCountsAndEditorLinks () {
 		if (!static::$files) {
 			$rawList = get_included_files();
 			$list = array();
@@ -59,4 +99,3 @@ class IncludePanel implements \Tracy\IBarPanel {
 		}
 	}
 }
-
