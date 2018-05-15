@@ -141,10 +141,13 @@ namespace {
 				} else {
 					\MvcCore\Application::GetInstance()->GetResponse()->SetHeader('Content-Type', 'text/html');
 					@header('Content-Type: text/html');
-					foreach ($args as $arg)
+					$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+					foreach ($args as $arg) {
+						echo '<pre>' . \Tracy\Helpers::editorLink($backtrace[0]['file'], $backtrace[0]['line']) . '</pre>';
 						echo \Tracy\Dumper::toHtml($arg, array(
-							\Tracy\Dumper::LOCATION => \Tracy\Dumper::LOCATION_CLASS | \Tracy\Dumper::LOCATION_SOURCE,
+							\Tracy\Dumper::LOCATION => 0,
 						));
+					}
 					exit;
 				}
 			}
