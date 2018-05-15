@@ -89,6 +89,8 @@ namespace MvcCore\Ext\Debug {
 			$includePanel = new \MvcCore\Ext\Debug\Tracy\IncludePanel();
 			$tracyBar->addPanel($includePanel, $includePanel->getId());
 			if (!static::$logDirectoryInitialized) static::initLogDirectory();
+			$sessionClass = static::$app->GetSessionClass();
+			$sessionClass::Start();
 			\Tracy\Debugger::enable(!static::$development, static::$LogDirectory, static::$EmailRecepient);
 		}
 
@@ -109,6 +111,7 @@ namespace {
 	\MvcCore\Ext\Debug\Tracy::$InitGlobalShortHands = function ($development) {
 		/**
 		 * Dump a variable in Tracy Debug Bar.
+		 * @tracySkipLocation
 		 * @param	mixed	$value		Variable to dump.
 		 * @param	string	$title		Optional title.
 		 * @param	array	$options	Dumper options.
@@ -119,6 +122,7 @@ namespace {
 		}
 		/**
 		 * Dumps variables about a variable in Tracy Debug Bar.
+		 * @tracySkipLocation
 		 * @param  ...mixed  Variables to dump.
 		 * @return	void
 		 */
@@ -131,6 +135,7 @@ namespace {
 			/**
 			 * Dump variables and die. If no variable, throw stop exception.
 			 * @param  ...mixed  $args	Variables to dump.
+			 * @tracySkipLocation
 			 * @throws \Exception
 			 * @return void
 			 */
@@ -155,6 +160,7 @@ namespace {
 			/**
 			 * Log variables and die. If no variable, throw stop exception.
 			 * @param  ...mixed  $args	Variables to dump.
+			 * @tracySkipLocation
 			 * @throws \Exception
 			 * @return void
 			 */
@@ -164,6 +170,7 @@ namespace {
 					foreach ($args as $arg)
 						\Tracy\Debugger::log($arg, \Tracy\ILogger::DEBUG);
 				\Tracy\Debugger::getBlueScreen()->render(NULL);
+				exit;
 			}
 		}
 	};
