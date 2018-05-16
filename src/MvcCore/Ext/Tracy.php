@@ -118,6 +118,7 @@ namespace {
 		 * @return	mixed				variable itself.
 		 */
 		function x ($value, $title = NULL, $options = array()) {
+			$options[\Tracy\Dumper::DEBUGINFO] = TRUE;
 			return \Tracy\Debugger::barDump($value, $title, $options);
 		}
 		/**
@@ -128,7 +129,7 @@ namespace {
 		 */
 		function xx () {
 			$args = func_get_args();
-			foreach ($args as $arg) \Tracy\Debugger::barDump($arg);
+			foreach ($args as $arg) \Tracy\Debugger::barDump($arg, NULL, array(\Tracy\Dumper::DEBUGINFO => TRUE));
 		}
 
 		if ($development) {
@@ -151,6 +152,7 @@ namespace {
 						echo '<pre>' . \Tracy\Helpers::editorLink($backtrace[0]['file'], $backtrace[0]['line']) . '</pre>';
 						echo \Tracy\Dumper::toHtml($arg, array(
 							\Tracy\Dumper::LOCATION => 0,
+							\Tracy\Dumper::DEBUGINFO => TRUE,
 						));
 					}
 					exit;
