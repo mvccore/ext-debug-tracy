@@ -80,7 +80,7 @@ namespace MvcCore\Ext\Debug {
 			$toolClass = static::$app->GetToolClass();
 			foreach (static::$ExtendedPanels as $panelName) {
 				$panelName = '\MvcCore\Ext\Debug\Tracy\\' . $panelName;
-				if (class_exists($panelName) && $toolClass::CheckClassInterface($panelName, 'Tracy\\IBarPanel', FALSE)) {
+				if (class_exists($panelName) && $toolClass::CheckClassInterface($panelName, 'Tracy\\IBarPanel', FALSE, FALSE)) {
 					$panel = new $panelName();
 					$tracyBar->addPanel($panel, $panel->getId());
 				}
