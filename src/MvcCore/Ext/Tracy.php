@@ -11,13 +11,13 @@
  * @license		https://mvccore.github.io/docs/mvccore/4.0.0/LICENCE.md
  */
 
-namespace MvcCore\Ext\Debug {
+namespace MvcCore\Ext\Debugs {
 
 	// Tracy library main class:
-	//require_once('Tracy/Debugger.php');
+	//require_once('Tracys/Debugger.php');
 
 	// MvcCore Tracy extension panel:
-	require_once('Tracy/IncludePanel.php');
+	require_once('Tracys/IncludePanel.php');
 
 	/**
 	 * Responsibility - any devel and logging messages and exceptions printing and logging by `Tracy`.
@@ -38,7 +38,7 @@ namespace MvcCore\Ext\Debug {
 
 		/**
 		 * Extended Tracy panels registry for automatic panel initialization.
-		 * If panel class exists in `\MvcCore\Ext\Debug\Tracy\<PanelClassName>`,
+		 * If panel class exists in `\MvcCore\Ext\Debugs\Tracys\<PanelClassName>`,
 		 * it's automaticly created and registred into Tracy debug bar.
 		 * @var string[]
 		 */
@@ -74,19 +74,19 @@ namespace MvcCore\Ext\Debug {
 			}
 			// if there is any editor string defined - add editor param into all file debug links
 			if (static::$Editor) \Tracy\Debugger::$editor .= '&editor=' . static::$Editor;
-			// automaticly initialize all classes in `\MvcCore\Ext\Debug\Tracy\<PanelClassName>`
+			// automaticly initialize all classes in `\MvcCore\Ext\Debugs\Tracys\<PanelClassName>`
 			// which implements `\Tracy\IBarPanel` and add those instances into tracy debug bar:
 			$tracyBar = \Tracy\Debugger::getBar();
 			$toolClass = static::$app->GetToolClass();
 			foreach (static::$ExtendedPanels as $panelName) {
-				$panelName = '\MvcCore\Ext\Debug\Tracy\\' . $panelName;
+				$panelName = '\\'.__CLASS__.'s\\' . $panelName;
 				if (class_exists($panelName) && $toolClass::CheckClassInterface($panelName, \Tracy\IBarPanel::class, FALSE, FALSE)) {
 					$panel = new $panelName();
 					$tracyBar->addPanel($panel, $panel->getId());
 				}
 			}
 			// all include panel every time as the last one
-			$includePanel = new \MvcCore\Ext\Debug\Tracy\IncludePanel();
+			$includePanel = new \MvcCore\Ext\Debugs\Tracys\IncludePanel();
 			$tracyBar->addPanel($includePanel, $includePanel->getId());
 			if (!static::$logDirectoryInitialized) static::initLogDirectory();
 			$sessionClass = static::$app->GetSessionClass();
@@ -108,7 +108,7 @@ namespace MvcCore\Ext\Debug {
 }
 
 namespace {
-	\MvcCore\Ext\Debug\Tracy::$InitGlobalShortHands = function ($development) {
+	\MvcCore\Ext\Debugs\Tracy::$InitGlobalShortHands = function ($development) {
 		/**
 		 * Dump a variable in Tracy Debug Bar.
 		 * @tracySkipLocation

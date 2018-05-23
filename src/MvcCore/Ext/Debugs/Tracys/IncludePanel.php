@@ -11,7 +11,7 @@
  * @license		https://mvccore.github.io/docs/mvccore/4.0.0/LICENCE.md
  */
 
-namespace MvcCore\Ext\Debug\Tracy;
+namespace MvcCore\Ext\Debugs\Tracys;
 
 /**
  * Responsibility - after all scripts are done, display all used PHP files in it's own `Tracy` debug bar.
