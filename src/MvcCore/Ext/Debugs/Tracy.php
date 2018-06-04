@@ -42,13 +42,13 @@ namespace MvcCore\Ext\Debugs {
 		 * it's automaticly created and registred into Tracy debug bar.
 		 * @var string[]
 		 */
-		public static $ExtendedPanels = array(
+		public static $ExtendedPanels = [
 			'MvcCorePanel',
 			'SessionPanel',
 			'RoutingPanel',
 			'AuthPanel',
 			// 'IncludePanel', // created and registered every time by default as the last one
-		);
+		];
 
 		/**
 		 * Add editor key for every Tracy editor link
@@ -60,7 +60,7 @@ namespace MvcCore\Ext\Debugs {
 		/**
 		 * Initialize debugging and logging, once only.
 		 * @param bool $forceDevelopmentMode If defined as `TRUE` or `FALSE`,
-		 *                                   debug mode will be set not by config but by this value.
+		 *								   debug mode will be set not by config but by this value.
 		 * @return void
 		 */
 		public static function Init ($forceDevelopmentMode = NULL) {
@@ -100,7 +100,7 @@ namespace MvcCore\Ext\Debugs {
 		 */
 		protected static function initHandlers () {
 			foreach (static::$handlers as $key => $value) {
-				static::$handlers[$key] = array(\Tracy\Debugger::class, $key);
+				static::$handlers[$key] = [\Tracy\Debugger::class, $key];
 			}
 			//register_shutdown_function(self::$handlers['shutdownHandler']); // already registered inside tracy debugger
 		}
@@ -117,7 +117,7 @@ namespace {
 		 * @param	array	$options	Dumper options.
 		 * @return	mixed				variable itself.
 		 */
-		function x ($value, $title = NULL, $options = array()) {
+		function x ($value, $title = NULL, $options = []) {
 			$options[\Tracy\Dumper::DEBUGINFO] = TRUE;
 			return \Tracy\Debugger::barDump($value, $title, $options);
 		}
@@ -129,7 +129,7 @@ namespace {
 		 */
 		function xx () {
 			$args = func_get_args();
-			foreach ($args as $arg) \Tracy\Debugger::barDump($arg, NULL, array(\Tracy\Dumper::DEBUGINFO => TRUE));
+			foreach ($args as $arg) \Tracy\Debugger::barDump($arg, NULL, [\Tracy\Dumper::DEBUGINFO => TRUE]);
 		}
 
 		if ($development) {
@@ -150,10 +150,10 @@ namespace {
 					$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 					foreach ($args as $arg) {
 						echo '<pre>' . \Tracy\Helpers::editorLink($backtrace[0]['file'], $backtrace[0]['line']) . '</pre>';
-						echo \Tracy\Dumper::toHtml($arg, array(
+						echo \Tracy\Dumper::toHtml($arg, [
 							\Tracy\Dumper::LOCATION => 0,
 							\Tracy\Dumper::DEBUGINFO => TRUE,
-						));
+						]);
 					}
 					exit;
 				}

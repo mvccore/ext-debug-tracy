@@ -24,7 +24,7 @@ class IncludePanel implements \Tracy\IBarPanel
 	 * All used PHP files list by current request.
 	 * @var string[]
 	 */
-	protected static $files = array();
+	protected static $files = [];
 
 	/**
 	 * Used PHP files count except files used by `Tracy` extension.
@@ -82,7 +82,7 @@ class IncludePanel implements \Tracy\IBarPanel
 	protected static function completeFilesCountsAndEditorLinks () {
 		if (!static::$files) {
 			$rawList = get_included_files();
-			$list = array();
+			$list = [];
 			$docRoot = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
 			$docRootLength = mb_strlen($docRoot);
 			$tracyFileDetectionSubstr = '/tracy';
