@@ -1,7 +1,7 @@
 {
 	"name": "mvccore/ext-debug-tracy",
 	"type": "library",
-	"description": "MvcCore - Extension - Debug - Tracy - adapter class for Nette framework tracy/tracy library.",
+	"description": "MvcCore - Extension - Debug - Tracy - adapter class for Nette Framework `tracy/tracy` library.",
 	"keywords": [
 		"mvc", 
 		"mvccore", 
