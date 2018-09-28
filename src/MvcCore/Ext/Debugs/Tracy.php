@@ -100,7 +100,7 @@ namespace MvcCore\Ext\Debugs {
 		 */
 		protected static function initHandlers () {
 			foreach (static::$handlers as $key => $value) {
-				static::$handlers[$key] = [\Tracy\Debugger::class, $key];
+				static::$handlers[$key] = ['\\Tracy\\Debugger', $key];
 			}
 			//register_shutdown_function(self::$handlers['shutdownHandler']); // already registered inside tracy debugger
 		}
