@@ -23,15 +23,15 @@ namespace MvcCore\Ext\Debugs {
 	 * Responsibility - any devel and logging messages and exceptions printing and logging by `Tracy`.
 	 * - Printing any variable in content body by `Tracy`.
 	 * - Printing any variable in `Tracy` debug bar.
-	 * - Catched exceptions printing by `Tracy`.
-	 * - Any variables and catched exceptions file logging by `Tracy`.
+	 * - Caught exceptions printing by `Tracy`.
+	 * - Any variables and caught exceptions file logging by `Tracy`.
 	 * - Time printing by `Tracy`.
 	 */
 	class Tracy extends \MvcCore\Debug {
 
 		/**
 		 * MvcCore Extension - Debug Tracy - version:
-		 * Comparation by PHP function version_compare();
+		 * Comparison by PHP function version_compare();
 		 * @see http://php.net/manual/en/function.version-compare.php
 		 */
 		const VERSION = '5.0.0-alpha';
@@ -39,7 +39,7 @@ namespace MvcCore\Ext\Debugs {
 		/**
 		 * Extended Tracy panels registry for automatic panel initialization.
 		 * If panel class exists in `\MvcCore\Ext\Debugs\Tracys\<PanelClassName>`,
-		 * it's automaticly created and registred into Tracy debug bar.
+		 * it's automatically created and registered into Tracy debug bar.
 		 * @var string[]
 		 */
 		public static $ExtendedPanels = [
@@ -74,7 +74,7 @@ namespace MvcCore\Ext\Debugs {
 			}
 			// if there is any editor string defined - add editor param into all file debug links
 			if (static::$Editor) \Tracy\Debugger::$editor .= '&editor=' . static::$Editor;
-			// automaticly initialize all classes in `\MvcCore\Ext\Debugs\Tracys\<PanelClassName>`
+			// automatically initialize all classes in `\MvcCore\Ext\Debugs\Tracys\<PanelClassName>`
 			// which implements `\Tracy\IBarPanel` and add those instances into tracy debug bar:
 			$tracyBar = \Tracy\Debugger::getBar();
 			$toolClass = static::$app->GetToolClass();
@@ -95,7 +95,7 @@ namespace MvcCore\Ext\Debugs {
 		}
 
 		/**
-		 * Initialize debuging and loging handlers.
+		 * Initialize debugging and logging handlers.
 		 * @return void
 		 */
 		protected static function initHandlers () {
