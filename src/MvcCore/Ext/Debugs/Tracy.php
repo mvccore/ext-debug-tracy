@@ -13,14 +13,14 @@
 
 namespace MvcCore\Ext\Debugs {
 
-	// Tracy library main class:
-	//require_once('Tracys/Debugger.php');
+	// Tracy exterrnal library main class:
+	//require_once('Tracy/Debugger.php');
 
 	// MvcCore Tracy extension panel:
 	require_once('Tracys/IncludePanel.php');
 
 	/**
-	 * Responsibility - any devel and logging messages and exceptions printing and logging by `Tracy`.
+	 * Responsibility - any development and logging messages and exceptions printing and logging by `Tracy`.
 	 * - Printing any variable in content body by `Tracy`.
 	 * - Printing any variable in `Tracy` debug bar.
 	 * - Caught exceptions printing by `Tracy`.
