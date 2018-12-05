@@ -79,7 +79,8 @@ namespace MvcCore\Ext\Debugs {
 			$tracyBar = \Tracy\Debugger::getBar();
 			$toolClass = static::$app->GetToolClass();
 			foreach (static::$ExtendedPanels as $panelName) {
-				$panelName = '\\'.__CLASS__.'s\\' . $panelName;
+				$selfClass = version_compare(PHP_VERSION, '5.5', '>') ? self::class : __CLASS__;
+				$panelName = '\\'.$selfClass.'s\\' . $panelName;
 				if (class_exists($panelName) && $toolClass::CheckClassInterface($panelName, 'Tracy\\IBarPanel', FALSE, FALSE)) {
 					$panel = new $panelName();
 					$tracyBar->addPanel($panel, $panel->getId());
