@@ -120,6 +120,7 @@ namespace {
 		 */
 		function x ($value, $title = NULL, $options = []) {
 			$options[\Tracy\Dumper::DEBUGINFO] = TRUE;
+			//$options[\Tracy\Dumper::LOCATION] = TRUE;
 			return \Tracy\Debugger::barDump($value, $title, $options);
 		}
 		/**
@@ -130,7 +131,11 @@ namespace {
 		 */
 		function xx () {
 			$args = func_get_args();
-			foreach ($args as $arg) \Tracy\Debugger::barDump($arg, NULL, [\Tracy\Dumper::DEBUGINFO => TRUE]);
+			foreach ($args as $arg) 
+				\Tracy\Debugger::barDump($arg, NULL, [
+					\Tracy\Dumper::LOCATION => TRUE,
+					\Tracy\Dumper::DEBUGINFO => TRUE
+				]);
 		}
 
 		if ($development) {
@@ -152,7 +157,7 @@ namespace {
 					foreach ($args as $arg) {
 						echo '<pre>' . \Tracy\Helpers::editorLink($backtrace[0]['file'], $backtrace[0]['line']) . '</pre>';
 						echo \Tracy\Dumper::toHtml($arg, [
-							\Tracy\Dumper::LOCATION => 0,
+							\Tracy\Dumper::LOCATION => TRUE,
 							\Tracy\Dumper::DEBUGINFO => TRUE,
 						]);
 					}
