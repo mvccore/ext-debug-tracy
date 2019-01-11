@@ -146,7 +146,7 @@ namespace {
 			 * @throws \Exception
 			 * @return void
 			 */
-			function xxx (/* ...$args */) {
+			function xxx ($args) {
 				$args = func_get_args();
 				if (count($args) === 0) {
 					throw new \ErrorException('Stopped.', 500);
@@ -172,7 +172,7 @@ namespace {
 			 * @throws \Exception
 			 * @return void
 			 */
-			function xxx (/* ...$args */) {
+			function xxx ($args) {
 				$args = func_get_args();
 				if (count($args) > 0)
 					foreach ($args as $arg)
