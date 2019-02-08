@@ -158,6 +158,7 @@ namespace {
 						echo '<pre>' . \Tracy\Helpers::editorLink($backtrace[0]['file'], $backtrace[0]['line']) . '</pre>';
 						echo \Tracy\Dumper::toHtml($arg, [
 							\Tracy\Dumper::LOCATION => TRUE,
+							\Tracy\Dumper::TRUNCATE => FALSE,
 							\Tracy\Dumper::DEBUGINFO => TRUE,
 						]);
 					}
