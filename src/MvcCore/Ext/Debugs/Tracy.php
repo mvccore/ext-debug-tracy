@@ -119,8 +119,9 @@ namespace {
 		 * @return	mixed				variable itself.
 		 */
 		function x ($value, $title = NULL, $options = []) {
+			$options[\Tracy\Dumper::LOCATION] = TRUE;
 			$options[\Tracy\Dumper::DEBUGINFO] = TRUE;
-			//$options[\Tracy\Dumper::LOCATION] = TRUE;
+			$options[\Tracy\Dumper::TRUNCATE] = FALSE;
 			return \Tracy\Debugger::barDump($value, $title, $options);
 		}
 		/**
@@ -134,6 +135,7 @@ namespace {
 			foreach ($args as $arg) 
 				\Tracy\Debugger::barDump($arg, NULL, [
 					\Tracy\Dumper::LOCATION => TRUE,
+					\Tracy\Dumper::TRUNCATE => FALSE,
 					\Tracy\Dumper::DEBUGINFO => TRUE
 				]);
 		}
