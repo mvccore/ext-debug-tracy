@@ -64,7 +64,9 @@ namespace MvcCore\Ext\Debugs {
 		 * @return void
 		 */
 		public static function Init ($forceDevelopmentMode = NULL) {
-			if (static::$development !== NULL) return;
+			if (static::$debugging !== NULL) return;
+			$strictExceptionsModelLocal = self::$strictExceptionsMode;
+			self::$strictExceptionsMode = FALSE;
 			parent::Init($forceDevelopmentMode);
 			\Tracy\Debugger::$maxDepth = 4;
 			if (isset(\Tracy\Debugger::$maxLen)) { // backwards compatibility
@@ -92,7 +94,13 @@ namespace MvcCore\Ext\Debugs {
 			if (!static::$logDirectoryInitialized) static::initLogDirectory();
 			$sessionClass = static::$app->GetSessionClass();
 			$sessionClass::Start();
-			\Tracy\Debugger::enable(!static::$development, static::$LogDirectory, static::$EmailRecepient);
+			$sysCfgDebug = static::getSystemCfgDebugSection();
+			static::$EmailRecepient = isset($sysCfgDebug['emailRecepient']) 
+				? $sysCfgDebug['emailRecepient'] 
+				: static::$EmailRecepient;
+			\Tracy\Debugger::enable(!static::$debugging, static::$LogDirectory, static::$EmailRecepient);
+			if ($strictExceptionsModelLocal !== FALSE) 
+				self::SetStrictExceptionsMode(TRUE);
 		}
 
 		/**
@@ -109,7 +117,7 @@ namespace MvcCore\Ext\Debugs {
 }
 
 namespace {
-	\MvcCore\Ext\Debugs\Tracy::$InitGlobalShortHands = function ($development) {
+	\MvcCore\Ext\Debugs\Tracy::$InitGlobalShortHands = function ($debugging) {
 		/**
 		 * Dump a variable in Tracy Debug Bar.
 		 * @tracySkipLocation
@@ -140,7 +148,7 @@ namespace {
 				]);
 		}
 
-		if ($development) {
+		if ($debugging) {
 			/**
 			 * Dump variables and die. If no variable, throw stop exception.
 			 * @param mixed $args,...	Variables to dump.
