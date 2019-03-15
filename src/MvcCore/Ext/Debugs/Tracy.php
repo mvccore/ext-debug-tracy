@@ -65,7 +65,7 @@ namespace MvcCore\Ext\Debugs {
 		 */
 		public static function Init ($forceDevelopmentMode = NULL) {
 			if (static::$debugging !== NULL) return;
-			$strictExceptionsModelLocal = self::$strictExceptionsMode;
+			$strictExceptionsModeLocal = self::$strictExceptionsMode;
 			self::$strictExceptionsMode = FALSE;
 			parent::Init($forceDevelopmentMode);
 			\Tracy\Debugger::$maxDepth = 4;
@@ -99,8 +99,8 @@ namespace MvcCore\Ext\Debugs {
 				? $sysCfgDebug['emailRecepient'] 
 				: static::$EmailRecepient;
 			\Tracy\Debugger::enable(!static::$debugging, static::$LogDirectory, static::$EmailRecepient);
-			if ($strictExceptionsModelLocal !== FALSE) 
-				self::SetStrictExceptionsMode(TRUE);
+			if ($strictExceptionsModeLocal !== FALSE) 
+				self::initStrictExceptionsMode($strictExceptionsModeLocal);
 		}
 
 		/**
@@ -156,7 +156,7 @@ namespace {
 			 * @throws \Exception
 			 * @return void
 			 */
-			function xxx ($args) {
+			function xxx ($args = NULL) {
 				$args = func_get_args();
 				if (count($args) === 0) {
 					throw new \ErrorException('Stopped.', 500);
@@ -183,7 +183,7 @@ namespace {
 			 * @throws \Exception
 			 * @return void
 			 */
-			function xxx ($args) {
+			function xxx ($args = NULL) {
 				$args = func_get_args();
 				if (count($args) > 0)
 					foreach ($args as $arg)
