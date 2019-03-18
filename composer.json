@@ -24,7 +24,7 @@
 	"require": {
 		"php": ">=5.4.0",
 		"mvccore/mvccore": "dev-master",
-		"tracy/tracy": "^2.4"
+		"tracy/tracy": ">=2.4 <2.5"
 	},
 	"autoload": {
 		"classmap": ["src/"]
