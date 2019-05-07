@@ -127,9 +127,9 @@ namespace {
 		 * @return	mixed				variable itself.
 		 */
 		function x ($value, $title = NULL, $options = []) {
-			$options[\Tracy\Dumper::LOCATION] = TRUE;
-			$options[\Tracy\Dumper::DEBUGINFO] = TRUE;
-			$options[\Tracy\Dumper::TRUNCATE] = FALSE;
+			$options[\Tracy\Dumper::LOCATION]	= 1;
+			$options[\Tracy\Dumper::DEBUGINFO]	= 1;
+			$options[\Tracy\Dumper::TRUNCATE]	= 0;
 			return \Tracy\Debugger::barDump($value, $title, $options);
 		}
 		/**
@@ -142,9 +142,9 @@ namespace {
 			$args = func_get_args();
 			foreach ($args as $arg) 
 				\Tracy\Debugger::barDump($arg, NULL, [
-					\Tracy\Dumper::LOCATION => TRUE,
-					\Tracy\Dumper::TRUNCATE => FALSE,
-					\Tracy\Dumper::DEBUGINFO => TRUE
+					\Tracy\Dumper::LOCATION		=> 1,
+					\Tracy\Dumper::TRUNCATE		=> 0,
+					\Tracy\Dumper::DEBUGINFO	=> 1
 				]);
 		}
 
@@ -167,9 +167,9 @@ namespace {
 					foreach ($args as $arg) {
 						echo '<pre>' . \Tracy\Helpers::editorLink($backtrace[0]['file'], $backtrace[0]['line']) . '</pre>';
 						echo \Tracy\Dumper::toHtml($arg, [
-							\Tracy\Dumper::LOCATION => TRUE,
-							\Tracy\Dumper::TRUNCATE => FALSE,
-							\Tracy\Dumper::DEBUGINFO => TRUE,
+							\Tracy\Dumper::LOCATION		=> 1,
+							\Tracy\Dumper::TRUNCATE		=> 0,
+							\Tracy\Dumper::DEBUGINFO	=> 1,
 						]);
 					}
 					exit;
