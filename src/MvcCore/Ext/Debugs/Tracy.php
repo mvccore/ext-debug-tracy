@@ -128,7 +128,7 @@ namespace {
 		 */
 		function x ($value, $title = NULL, $options = []) {
 			$options[\Tracy\Dumper::LOCATION]	= 1;
-			$options[\Tracy\Dumper::DEBUGINFO]	= 1;
+			$options[\Tracy\Dumper::DEBUGINFO]	= TRUE;
 			$options[\Tracy\Dumper::TRUNCATE]	= 0;
 			return \Tracy\Debugger::barDump($value, $title, $options);
 		}
@@ -144,7 +144,7 @@ namespace {
 				\Tracy\Debugger::barDump($arg, NULL, [
 					\Tracy\Dumper::LOCATION		=> 1,
 					\Tracy\Dumper::TRUNCATE		=> 0,
-					\Tracy\Dumper::DEBUGINFO	=> 1
+					\Tracy\Dumper::DEBUGINFO	=> TRUE
 				]);
 		}
 
@@ -169,7 +169,7 @@ namespace {
 						echo \Tracy\Dumper::toHtml($arg, [
 							\Tracy\Dumper::LOCATION		=> 1,
 							\Tracy\Dumper::TRUNCATE		=> 0,
-							\Tracy\Dumper::DEBUGINFO	=> 1,
+							\Tracy\Dumper::DEBUGINFO	=> TRUE,
 						]);
 					}
 					exit;
