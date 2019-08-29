@@ -124,13 +124,18 @@ namespace {
 		 * @param	mixed	$value		Variable to dump.
 		 * @param	string	$title		Optional title.
 		 * @param	array	$options	Dumper options.
-		 * @return	mixed				variable itself.
+		 * @return	mixed				Variable itself.
 		 */
 		function x ($value, $title = NULL, $options = []) {
-			$options[\Tracy\Dumper::LOCATION]	= 1;
-			$options[\Tracy\Dumper::DEBUGINFO]	= TRUE;
+			$options[\Tracy\Dumper::LOCATION]	= TRUE;
 			$options[\Tracy\Dumper::TRUNCATE]	= 0;
-			return \Tracy\Debugger::barDump($value, $title, $options);
+			$options[\Tracy\Dumper::DEBUGINFO]	= TRUE;
+			if (PHP_SAPI === 'cli') {
+				if ($title !== NULL) echo $title . ':' . PHP_EOL;
+				return \Tracy\Dumper::dump($value, $options);
+			} else {
+				return \Tracy\Debugger::barDump($value, $title, $options);
+			}
 		}
 		/**
 		 * Dumps variables about a variable in Tracy Debug Bar.
@@ -140,12 +145,19 @@ namespace {
 		 */
 		function xx () {
 			$args = func_get_args();
-			foreach ($args as $arg) 
-				\Tracy\Debugger::barDump($arg, NULL, [
-					\Tracy\Dumper::LOCATION		=> 1,
-					\Tracy\Dumper::TRUNCATE		=> 0,
-					\Tracy\Dumper::DEBUGINFO	=> TRUE
-				]);
+			$isCli = PHP_SAPI === 'cli';
+			$options = [
+				\Tracy\Dumper::LOCATION		=> TRUE,
+				\Tracy\Dumper::TRUNCATE		=> 0,
+				\Tracy\Dumper::DEBUGINFO	=> TRUE
+			];
+			foreach ($args as $arg) {
+				if ($isCli) {
+					\Tracy\Dumper::dump($arg, $options);
+				} else {
+					\Tracy\Debugger::barDump($arg, NULL, $options);
+				}
+			}
 		}
 
 		if ($debugging) {
@@ -164,13 +176,22 @@ namespace {
 					\MvcCore\Application::GetInstance()->GetResponse()->SetHeader('Content-Type', 'text/html');
 					@header('Content-Type: text/html');
 					$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+					$isCli = PHP_SAPI === 'cli';
+					$options = [
+						\Tracy\Dumper::LOCATION		=> TRUE,
+						\Tracy\Dumper::TRUNCATE		=> 0,
+						\Tracy\Dumper::DEBUGINFO	=> TRUE,
+					];
 					foreach ($args as $arg) {
-						echo '<pre>' . \Tracy\Helpers::editorLink($backtrace[0]['file'], $backtrace[0]['line']) . '</pre>';
-						echo \Tracy\Dumper::toHtml($arg, [
-							\Tracy\Dumper::LOCATION		=> 1,
-							\Tracy\Dumper::TRUNCATE		=> 0,
-							\Tracy\Dumper::DEBUGINFO	=> TRUE,
-						]);
+						
+						if ($isCli) {
+							\Tracy\Dumper::dump($arg, $options);
+						} else {
+							echo '<pre>' . \Tracy\Helpers::editorLink(
+								$backtrace[0]['file'], $backtrace[0]['line']
+							) . '</pre>';
+							echo \Tracy\Dumper::toHtml($arg, $options);
+						}
 					}
 					exit;
 				}
