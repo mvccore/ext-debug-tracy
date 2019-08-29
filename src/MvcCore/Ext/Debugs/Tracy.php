@@ -183,7 +183,6 @@ namespace {
 						\Tracy\Dumper::DEBUGINFO	=> TRUE,
 					];
 					foreach ($args as $arg) {
-						
 						if ($isCli) {
 							\Tracy\Dumper::dump($arg, $options);
 						} else {
@@ -209,7 +208,15 @@ namespace {
 				if (count($args) > 0)
 					foreach ($args as $arg)
 						\Tracy\Debugger::log($arg, \Tracy\ILogger::DEBUG);
-				\Tracy\Debugger::getBlueScreen()->render(NULL);
+				if (PHP_SAPI === 'cli') {
+					echo 'Stopped' . PHP_EOL;
+				} else {
+					try {
+						throw new \Exception('Stopped.', 500);
+					} catch (\Exception $e) {
+						\Tracy\Debugger::getBlueScreen()->render($e);	
+					}
+				}
 				exit;
 			}
 		}
