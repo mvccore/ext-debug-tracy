@@ -205,10 +205,22 @@ namespace {
 			 */
 			function xxx ($args = NULL) {
 				$args = func_get_args();
-				if (count($args) > 0)
-					foreach ($args as $arg)
-						\Tracy\Debugger::log($arg, \Tracy\ILogger::DEBUG);
-				if (PHP_SAPI === 'cli') {
+				$isCli = PHP_SAPI === 'cli';
+				$options = [
+					\Tracy\Dumper::LOCATION		=> TRUE,
+					\Tracy\Dumper::TRUNCATE		=> 0,
+					\Tracy\Dumper::DEBUGINFO	=> TRUE,
+				];
+				if (count($args) > 0) {
+					foreach ($args as $arg) {
+						if ($isCli) {
+							\Tracy\Dumper::dump($arg, $options);
+						} else {
+							\Tracy\Debugger::log($arg, \Tracy\ILogger::DEBUG);
+						}
+					}
+				}
+				if ($isCli) {
 					echo 'Stopped' . PHP_EOL;
 				} else {
 					try {
