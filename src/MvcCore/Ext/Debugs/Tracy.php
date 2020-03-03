@@ -80,7 +80,7 @@ namespace MvcCore\Ext\Debugs {
 			// which implements `\Tracy\IBarPanel` and add those instances into tracy debug bar:
 			$tracyBar = \Tracy\Debugger::getBar();
 			$toolClass = static::$app->GetToolClass();
-			$selfClass = version_compare(PHP_VERSION, '5.5', '>') ? self::class : __CLASS__;
+			$selfClass = PHP_VERSION_ID >= 50500 ? self::class : __CLASS__;
 			foreach (static::$ExtendedPanels as $panelName) {
 				$panelName = '\\'.$selfClass.'s\\' . $panelName;
 				if (class_exists($panelName) && $toolClass::CheckClassInterface($panelName, 'Tracy\\IBarPanel', FALSE, FALSE)) {
@@ -95,11 +95,11 @@ namespace MvcCore\Ext\Debugs {
 			$sessionClass = static::$app->GetSessionClass();
 			$sessionClass::Start();
 			$sysCfgDebug = static::getSystemCfgDebugSection();
-			static::$EmailRecepient = isset($sysCfgDebug['emailRecepient']) 
-				? $sysCfgDebug['emailRecepient'] 
+			static::$EmailRecepient = isset($sysCfgDebug['emailRecepient'])
+				? $sysCfgDebug['emailRecepient']
 				: static::$EmailRecepient;
 			\Tracy\Debugger::enable(!static::$debugging, static::$LogDirectory, static::$EmailRecepient);
-			if ($strictExceptionsModeLocal !== FALSE) 
+			if ($strictExceptionsModeLocal !== FALSE)
 				self::initStrictExceptionsMode($strictExceptionsModeLocal);
 		}
 
@@ -226,7 +226,7 @@ namespace {
 					try {
 						throw new \Exception('Stopped.', 500);
 					} catch (\Exception $e) {
-						\Tracy\Debugger::getBlueScreen()->render($e);	
+						\Tracy\Debugger::getBlueScreen()->render($e);
 					}
 				}
 				exit;
