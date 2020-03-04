@@ -86,7 +86,7 @@ class IncludePanel implements \Tracy\IBarPanel
 			$docRoot = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
 			$docRootLength = mb_strlen($docRoot);
 			$tracyFileDetectionSubstr = '/tracy';
-			foreach ($rawList as & $file) {
+			foreach ($rawList as $file) {
 				$file = str_replace('\\', '/', $file);
 				$text = mb_substr($file, $docRootLength);
 				$tracyFile = mb_stripos($text, $tracyFileDetectionSubstr) !== FALSE;
