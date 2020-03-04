@@ -80,7 +80,7 @@ namespace MvcCore\Ext\Debugs {
 			// which implements `\Tracy\IBarPanel` and add those instances into tracy debug bar:
 			$tracyBar = \Tracy\Debugger::getBar();
 			$toolClass = static::$app->GetToolClass();
-			$selfClass = PHP_VERSION_ID >= 50500 ? self::class : __CLASS__;
+			$selfClass = get_class();
 			foreach (static::$ExtendedPanels as $panelName) {
 				$panelName = '\\'.$selfClass.'s\\' . $panelName;
 				if (class_exists($panelName) && $toolClass::CheckClassInterface($panelName, 'Tracy\\IBarPanel', FALSE, FALSE)) {
