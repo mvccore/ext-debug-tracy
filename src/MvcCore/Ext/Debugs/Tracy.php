@@ -173,22 +173,20 @@ namespace {
 				if (count($args) === 0) {
 					throw new \ErrorException('Stopped.', 500);
 				} else {
-					\MvcCore\Application::GetInstance()->GetResponse()->SetHeader('Content-Type', 'text/html');
-					@header('Content-Type: text/html');
+					if (!headers_sent())
+						@header('Content-Type: text/html');
 					$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 					$isCli = PHP_SAPI === 'cli';
 					$options = [
 						\Tracy\Dumper::LOCATION		=> TRUE,
 						\Tracy\Dumper::TRUNCATE		=> 0,
 						\Tracy\Dumper::DEBUGINFO	=> TRUE,
+						\Tracy\Dumper::LIVE			=> FALSE,
 					];
 					foreach ($args as $arg) {
 						if ($isCli) {
 							\Tracy\Dumper::dump($arg, $options);
 						} else {
-							echo '<pre>' . \Tracy\Helpers::editorLink(
-								$backtrace[0]['file'], $backtrace[0]['line']
-							) . '</pre>';
 							echo \Tracy\Dumper::toHtml($arg, $options);
 						}
 					}
@@ -210,6 +208,7 @@ namespace {
 					\Tracy\Dumper::LOCATION		=> TRUE,
 					\Tracy\Dumper::TRUNCATE		=> 0,
 					\Tracy\Dumper::DEBUGINFO	=> TRUE,
+					\Tracy\Dumper::LIVE			=> FALSE,
 				];
 				if (count($args) > 0) {
 					foreach ($args as $arg) {
