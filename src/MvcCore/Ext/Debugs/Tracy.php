@@ -92,6 +92,7 @@ namespace MvcCore\Ext\Debugs {
 			$includePanel = new \MvcCore\Ext\Debugs\Tracys\IncludePanel();
 			$tracyBar->addPanel($includePanel, $includePanel->getId());
 			if (!static::$logDirectoryInitialized) static::initLogDirectory();
+			/** @var $sessionClass \MvcCore\Session */
 			$sessionClass = static::$app->GetSessionClass();
 			$sessionClass::Start();
 			$sysCfgDebug = static::getSystemCfgDebugSection();
