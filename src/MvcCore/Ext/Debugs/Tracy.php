@@ -65,8 +65,8 @@ namespace MvcCore\Ext\Debugs {
 		 */
 		public static function Init ($forceDevelopmentMode = NULL) {
 			if (static::$debugging !== NULL) return;
-			$strictExceptionsModeLocal = self::$strictExceptionsMode;
-			self::$strictExceptionsMode = FALSE;
+			$strictExceptionsModeLocal = static::$strictExceptionsMode;
+			static::$strictExceptionsMode = FALSE;
 			parent::Init($forceDevelopmentMode);
 			\Tracy\Debugger::$maxDepth = 4;
 			if (isset(\Tracy\Debugger::$maxLen)) { // backwards compatibility
