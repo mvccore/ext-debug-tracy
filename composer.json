@@ -3,17 +3,17 @@
 	"type": "library",
 	"description": "MvcCore - Extension - Debug - Tracy - adapter class for Nette Framework `tracy/tracy` library.",
 	"keywords": [
-		"mvc", 
-		"mvccore", 
-		"framework", 
-		"extension", 
-		"plugin", 
-		"plug-in", 
-		"ext", 
-		"debug", 
-		"nette", 
-		"tracy", 
-		"debug bar", 
+		"mvc",
+		"mvccore",
+		"framework",
+		"extension",
+		"plugin",
+		"plug-in",
+		"ext",
+		"debug",
+		"nette",
+		"tracy",
+		"debug bar",
 		"var dumping"
 	],
 	"license": ["BSD-3-Clause"],
@@ -23,11 +23,13 @@
 	}],
 	"require": {
 		"php": ">=5.4.0",
-		"mvccore/mvccore": "dev-master",
-		"tomflidr/tracy": "^2.5.10"
+		"mvccore/mvccore": "^5.0",
+		"tomflidr/tracy": "^2.5.11"
 	},
 	"autoload": {
-		"classmap": ["src/"]
+		"classmap": [
+			"src/"
+		]
 	},
 	"minimum-stability": "dev"
 }
