@@ -64,7 +64,9 @@ class IncludePanel implements \Tracy\IBarPanel {
 		self::completeFilesCountsAndEditorLinks();
 		$usedFilesListCode = join("", static::$files);
 		return '<style type="text/css">'
-				.'#tracy-include-panel .content{overflow:auto;max-width:800px;max-height:800px;}'
+				.'#tracy-include-panel{overflow:hidden;}'
+				.'.tracy-mode-float #tracy-include-panel{overflow:visible;}'
+				.'#tracy-include-panel .content a{white-space:nowrap;}'
 				.'#tracy-include-panel .content .tracy{color:#7a91a9;background:#eee;}'
 			.'</style>'
 			.'<div id="tracy-include-panel">'
@@ -83,17 +85,19 @@ class IncludePanel implements \Tracy\IBarPanel {
 		if (!static::$files) {
 			$rawList = get_included_files();
 			$list = [];
-			$docRoot = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
+			$docRoot = \MvcCore\Application::GetInstance()->GetRequest()->GetAppRoot();
 			$docRootLength = mb_strlen($docRoot);
 			$tracyFileDetectionSubstr = '/tracy';
 			foreach ($rawList as $file) {
 				$file = str_replace('\\', '/', $file);
-				$text = mb_substr($file, $docRootLength);
+				$text = (mb_strpos($file, $docRoot) === 0)
+					? mb_substr($file, $docRootLength)
+					: $file;
 				$tracyFile = mb_stripos($text, $tracyFileDetectionSubstr) !== FALSE;
 				if (!$tracyFile) static::$appFilesCount += 1;
 				static::$allFilesCount += 1;
 				$href = \Tracy\Helpers::editorUri($file, 1);
-				$list[] = '<a '.($tracyFile ? 'class="tracy" ':'').'href="'.$href.'"><nobr>'.$text.'</nobr></a><br />';
+				$list[] = '<a '.($tracyFile ? 'class="tracy" ':'').'href="'.$href.'">'.$text.'</a><br />';
 			}
 			static::$files = & $list;
 		}
