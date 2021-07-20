@@ -46,6 +46,7 @@ namespace MvcCore\Ext\Debugs {
 			'MvcCorePanel',
 			'SessionPanel',
 			'RoutingPanel',
+			'DbPanel',
 			'AuthPanel',
 			// 'IncludePanel', // created and registered every time by default as the last one
 		];
