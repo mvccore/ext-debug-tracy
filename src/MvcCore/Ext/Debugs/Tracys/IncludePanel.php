@@ -66,6 +66,7 @@ class IncludePanel implements \Tracy\IBarPanel {
 		return '<style type="text/css">'
 				.'#tracy-include-panel{overflow:hidden;}'
 				.'.tracy-mode-float #tracy-include-panel{overflow:visible;}'
+				.'#tracy-debug #tracy-include-panel h1{word-wrap: normal;}'
 				.'#tracy-include-panel .content a{white-space:nowrap;}'
 				.'#tracy-include-panel .content .tracy{color:#7a91a9;background:#eee;}'
 			.'</style>'
