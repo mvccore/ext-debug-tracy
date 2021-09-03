@@ -63,7 +63,9 @@ class IncludePanel implements \Tracy\IBarPanel {
 	public function getPanel() {
 		self::completeFilesCountsAndEditorLinks();
 		$usedFilesListCode = join("", $this->files);
-		return '<style type="text/css">'
+		$nonce = \Tracy\Helpers::getNonce();
+		$nonceAttr = $nonce ? ' nonce="' . \Tracy\Helpers::escapeHtml($nonce) . '"' : '';
+		return '<style type="text/css"'.$nonceAttr.'>'
 				.'#tracy-include-panel{overflow:hidden;}'
 				.'.tracy-mode-float #tracy-include-panel{overflow:visible;}'
 				.'#tracy-debug #tracy-include-panel h1{word-wrap: normal;}'
