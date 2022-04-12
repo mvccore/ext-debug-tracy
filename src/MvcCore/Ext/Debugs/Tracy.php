@@ -34,7 +34,7 @@ namespace MvcCore\Ext\Debugs {
 		 * Comparison by PHP function version_compare();
 		 * @see http://php.net/manual/en/function.version-compare.php
 		 */
-		const VERSION = '5.0.5';
+		const VERSION = '5.1.0';
 
 		/**
 		 * Extended Tracy panels registry for automatic panel initialization.
@@ -43,10 +43,12 @@ namespace MvcCore\Ext\Debugs {
 		 * @var string[]
 		 */
 		public static $ExtendedPanels = [
+			// MvcCore official panels to init automatically if installed:
 			'MvcCorePanel',
 			'SessionPanel',
 			'RoutingPanel',
 			'DbPanel',
+			'RefreshPanel',
 			'AuthPanel',
 			// 'IncludePanel', // created and registered every time by default as the last one
 		];
@@ -96,10 +98,8 @@ namespace MvcCore\Ext\Debugs {
 			/** @var \MvcCore\Session $sessionClass */
 			$sessionClass = static::$app->GetSessionClass();
 			$sessionClass::Start();
-			$sysCfgDebug = static::getSystemCfgDebugSection();
-			static::$EmailRecepient = isset($sysCfgDebug['emailRecepient'])
-				? $sysCfgDebug['emailRecepient']
-				: static::$EmailRecepient;
+			$sysCfgDebug = static::GetSystemCfgDebugSection();
+			static::$EmailRecepient = $sysCfgDebug->emailRecepient ?: static::$EmailRecepient;
 			\Tracy\Debugger::enable(!static::$debugging, static::$LogDirectory, static::$EmailRecepient);
 			if ($strictExceptionsModeLocal !== FALSE)
 				self::initStrictExceptionsMode($strictExceptionsModeLocal);
