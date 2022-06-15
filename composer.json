@@ -24,7 +24,7 @@
 	"require": {
 		"php": ">=5.4.0",
 		"mvccore/mvccore": "^5.1.17",
-		"tomflidr/tracy": "<=2.5.12"
+		"tomflidr/tracy": ">=2.5.13"
 	},
 	"autoload": {
 		"classmap": [
