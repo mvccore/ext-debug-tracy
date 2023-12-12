@@ -34,7 +34,7 @@ namespace MvcCore\Ext\Debugs {
 		 * Comparison by PHP function version_compare();
 		 * @see http://php.net/manual/en/function.version-compare.php
 		 */
-		const VERSION = '5.0.10';
+		const VERSION = '5.2.0';
 
 		/**
 		 * Extended Tracy panels registry for automatic panel initialization.
@@ -83,7 +83,7 @@ namespace MvcCore\Ext\Debugs {
 			// which implements `\Tracy\IBarPanel` and add those instances into tracy debug bar:
 			$tracyBar = \Tracy\Debugger::getBar();
 			$toolClass = static::$app->GetToolClass();
-			$selfClass = get_class();
+			$selfClass = get_called_class();
 			foreach (static::$ExtendedPanels as $panelName) {
 				$panelName = '\\'.$selfClass.'s\\' . $panelName;
 				if (class_exists($panelName) && $toolClass::CheckClassInterface($panelName, 'Tracy\\IBarPanel', FALSE, FALSE)) {
