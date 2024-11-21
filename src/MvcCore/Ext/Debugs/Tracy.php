@@ -99,8 +99,8 @@ namespace MvcCore\Ext\Debugs {
 			$sessionClass = static::$app->GetSessionClass();
 			$sessionClass::Start();
 			$sysCfgDebug = static::GetSystemCfgDebugSection();
-			static::$EmailRecepient = $sysCfgDebug->emailRecepient ?: static::$EmailRecepient;
-			\Tracy\Debugger::enable(!static::$debugging, static::$LogDirectory, static::$EmailRecepient);
+			static::$emailRecepient = $sysCfgDebug->emailRecepient ?: static::$emailRecepient;
+			\Tracy\Debugger::enable(!static::$debugging, static::$app->GetPathLogs(TRUE), static::$emailRecepient);
 			if ($strictExceptionsModeLocal !== FALSE)
 				self::initStrictExceptionsMode($strictExceptionsModeLocal);
 		}

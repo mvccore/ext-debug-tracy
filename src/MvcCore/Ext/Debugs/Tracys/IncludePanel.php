@@ -88,7 +88,7 @@ class IncludePanel implements \Tracy\IBarPanel {
 		if (!$this->files) {
 			$rawList = get_included_files();
 			$list = [];
-			$appRoot = \MvcCore\Application::GetInstance()->GetRequest()->GetAppRoot();
+			$appRoot = \MvcCore\Application::GetInstance()->GetPathAppRoot();
 			$appRootLen = mb_strlen($appRoot);
 			$tracyFileDetectionSubstr = '/tracy';
 			foreach ($rawList as $file) {
