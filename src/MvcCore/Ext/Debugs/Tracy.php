@@ -35,6 +35,13 @@ namespace MvcCore\Ext\Debugs {
 		 * @see http://php.net/manual/en/function.version-compare.php
 		 */
 		const VERSION = '5.3.2';
+		
+		/**
+		 * Add editor key for every Tracy editor link
+		 * to open your files in specific editor.
+		 * @var string
+		 */
+		public static $Editor = '';
 
 		/**
 		 * Extended Tracy panels registry for automatic panel initialization.
@@ -42,7 +49,7 @@ namespace MvcCore\Ext\Debugs {
 		 * it's automatically created and registered into Tracy debug bar.
 		 * @var string[]
 		 */
-		public static $ExtendedPanels = [
+		protected static $extPanelNames = [
 			// MvcCore official panels to init automatically if installed:
 			'MvcCorePanel',
 			'SessionPanel',
@@ -52,13 +59,6 @@ namespace MvcCore\Ext\Debugs {
 			'AuthPanel',
 			// 'IncludePanel', // created and registered every time by default as the last one
 		];
-
-		/**
-		 * Add editor key for every Tracy editor link
-		 * to open your files in specific editor.
-		 * @var string
-		 */
-		public static $Editor = '';
 
 		/**
 		 * Initialize debugging and logging, once only.
@@ -84,7 +84,7 @@ namespace MvcCore\Ext\Debugs {
 			$tracyBar = \Tracy\Debugger::getBar();
 			$toolClass = static::$app->GetToolClass();
 			$selfClass = get_called_class();
-			foreach (static::$ExtendedPanels as $panelName) {
+			foreach (static::$extPanelNames as $panelName) {
 				$panelName = '\\'.$selfClass.'s\\' . $panelName;
 				if (class_exists($panelName) && $toolClass::CheckClassInterface($panelName, 'Tracy\\IBarPanel', FALSE, FALSE)) {
 					$panel = new $panelName();
@@ -103,6 +103,35 @@ namespace MvcCore\Ext\Debugs {
 			\Tracy\Debugger::enable(!static::$debugging, static::$app->GetPathLogs(TRUE), static::$emailRecepient);
 			if ($strictExceptionsModeLocal !== FALSE)
 				self::initStrictExceptionsMode($strictExceptionsModeLocal);
+		}
+
+		/**
+		 * Add extended panel name - class name 
+		 * inside namespace `\MvcCore\Ext\Debugs\Tracys`.
+		 * @param  string $panelName
+		 * @return void
+		 */
+		public static function AddPanelName ($panelName) {
+			static::$extPanelNames[] = $panelName;
+		}
+
+		/**
+		 * Set extended panel names - class names 
+		 * inside namespace `\MvcCore\Ext\Debugs\Tracys`.
+		 * @param  array<string> $panelNames
+		 * @return void
+		 */
+		public static function SetPanelNames ($panelNames) {
+			static::$extPanelNames = $panelNames;
+		}
+
+		/**
+		 * Get extended panel names - class names 
+		 * inside namespace `\MvcCore\Ext\Debugs\Tracys`.
+		 * @return array<string>
+		 */
+		public static function GetPanelNames () {
+			return static::$extPanelNames;
 		}
 
 		/**

@@ -63,7 +63,10 @@ class IncludePanel implements \Tracy\IBarPanel {
 	public function getPanel() {
 		self::completeFilesCountsAndEditorLinks();
 		$usedFilesListCode = join("", $this->files);
-		$nonce = $nonce = version_compare(\Tracy\Debugger::Version, '2.10.8', '>=')
+		$tracyVersion = defined("\\Tracy\\Debugger::Version")
+			? \Tracy\Debugger::Version
+			: \Tracy\Debugger::VERSION;
+		$nonce = $nonce = version_compare($tracyVersion, '2.10.8', '>=')
 			? \Tracy\Helpers::getNonceAttr()
 			: \Tracy\Helpers::getNonce();
 		$nonceAttr = $nonce ? ' nonce="' . \Tracy\Helpers::escapeHtml($nonce) . '"' : '';
@@ -71,12 +74,12 @@ class IncludePanel implements \Tracy\IBarPanel {
 				.'#tracy-include-panel{overflow:hidden;}'
 				.'.tracy-mode-float #tracy-include-panel{overflow:visible;}'
 				.'#tracy-debug #tracy-include-panel h1{word-wrap: normal;}'
-				.'#tracy-include-panel .content a{white-space:nowrap;}'
-				.'#tracy-include-panel .content .tracy{color:#7a91a9;background:#eee;}'
+				.'#tracy-include-panel-content a{white-space:nowrap;}'
+				.'#tracy-include-panel-content .tracy{color:#7a91a9;background:#eee;}'
 			.'</style>'
 			.'<div id="tracy-include-panel">'
 				.'<h1>Included app files: '.$this->appFilesCount.' (all: '.$this->allFilesCount.')</h1>'
-				.'<div class="content"><code>'
+				.'<div id="tracy-include-panel-content"><code>'
 					.$usedFilesListCode
 				.'<code></div>'
 			.'</div>';
