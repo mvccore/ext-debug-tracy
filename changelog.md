@@ -1,3 +1,2 @@
 ### Fixed
-- Compatibility fix for `tracy/tracy` package and it's method renamed:  
-  `\Tracy\Helpers::getNonce()` => `getNonceAttr()`.
+- `tracy/tracy` dependency updated to version range `>=2.5 <=2.10`.
