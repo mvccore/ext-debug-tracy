@@ -102,7 +102,7 @@ class IncludePanel implements \Tracy\IBarPanel {
 				$tracyFile = mb_stripos($text, $tracyFileDetectionSubstr) !== FALSE;
 				if (!$tracyFile) $this->appFilesCount += 1;
 				$this->allFilesCount += 1;
-				$href = \Tracy\Helpers::editorUri($file, 1);
+				$href = $file != NULL ? \Tracy\Helpers::editorUri($file, 1, 'open', '', '') : '';
 				$list[] = '<a '.($tracyFile ? 'class="tracy" ':'').'href="'.$href.'">'.$text.'</a><br />';
 			}
 			$this->files = & $list;
