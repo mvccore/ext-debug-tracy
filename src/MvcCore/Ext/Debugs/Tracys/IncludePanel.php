@@ -66,7 +66,7 @@ class IncludePanel implements \Tracy\IBarPanel {
 		$tracyVersion = defined("\\Tracy\\Debugger::Version")
 			? \Tracy\Debugger::Version
 			: \Tracy\Debugger::VERSION;
-		$nonce = $nonce = version_compare($tracyVersion, '2.10.8', '>=')
+		$nonce = $nonce = version_compare($tracyVersion, '2.10.8', '>=') && version_compare($tracyVersion, '2.11.1', '<=')
 			? \Tracy\Helpers::getNonceAttr()
 			: \Tracy\Helpers::getNonce();
 		$nonceAttr = $nonce ? ' nonce="' . \Tracy\Helpers::escapeHtml($nonce) . '"' : '';
