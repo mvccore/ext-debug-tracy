@@ -1,2 +1,2 @@
 ### Fixed
-- Compatible FIXES for older `tracy/tracy` on newer PHP versions.
+- Compatible FIX for internal `tracy/tracy` method `\Tracy\Helpers::getNonce[Attr]()`.
